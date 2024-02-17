@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { enUS, deDE, heIL } from "@clerk/localizations";
+import { ThemeModeScript } from "flowbite-react";
+import { Flowbite } from "flowbite-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,9 +31,18 @@ export default function RootLayout({
   };
   return (
     <ClerkProvider localization={clerkLocale[locale]}>
-      <html lang={locale} dir={locale === "he" ? "rtl" : "ltr"}>
+      <html
+        lang={locale}
+        dir={locale === "he" ? "rtl" : "ltr"}
+        suppressHydrationWarning
+      >
+        <head>
+          <ThemeModeScript />
+        </head>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            <Flowbite>{children}</Flowbite>
+          </body>
         </NextIntlClientProvider>
       </html>
     </ClerkProvider>
