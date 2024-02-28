@@ -33,3 +33,10 @@ rm -r -fo .\node_modules\
 *********
 node .\scripts\seed.ts
 *********
+VSCODE
+Ctrl+D or Ctrl+Shift+L
+**************************
+            {new Intl.NumberFormat("he-IL", {
+              style: "currency",
+              currency: "ILS",
+            }).format(100)}

@@ -26,6 +26,7 @@ export default function LocaleSwitcherSelect({
 
   return (
     <Select
+      className="min-w-20"
       defaultValue={defaultValue}
       disabled={isPending}
       onChange={onSelectChange}

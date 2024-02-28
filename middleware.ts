@@ -4,14 +4,14 @@ import { locales } from "./navigation";
 
 const intlMiddleware = createMiddleware({
   locales,
-  defaultLocale: "en",
+  defaultLocale: "he",
 });
 
 export default authMiddleware({
   beforeAuth(request) {
     return intlMiddleware(request);
   },
-  publicRoutes: ["/", "/:locale", "/:locale/sign-in", "/:locale/sign-up"],
+  publicRoutes: [],
   // debug: true,
 });
 
@@ -20,6 +20,6 @@ export const config = {
     "/((?!.+\\.[\\w]+$|_next).*)",
     "/",
     "/(api|trpc)(.*)",
-    "/(en|de|he)/:path*",
+    "/(en|de|ru|he)/:path*",
   ],
 };
