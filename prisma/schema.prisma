@@ -12,13 +12,24 @@ datasource db {
 }
 
 model Product {
-  id        String  @id @default(uuid())
-  title     String
-  measure   Measure
-  unit      Int
+  id     String         @id @default(uuid())
+  title  String
+  orders OrderProduct[]
 }
 
-enum Measure {
-  GRAM
-  BOX
+model Order {
+  authId   String         @id
+  name     String
+  email    String
+  products OrderProduct[]
+}
+
+model OrderProduct {
+  order       Order   @relation(fields: [orderAuthId], references: [authId], onDelete: Cascade)
+  orderAuthId String
+  product     Product @relation(fields: [productId], references: [id])
+  productId   String
+  quantity    Int
+
+  @@id([orderAuthId, productId])
 }

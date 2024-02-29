@@ -21,7 +21,7 @@ npx prisma studio
 npx prisma generate
 npx prisma db push
 
-npx prisma migrate reset
+npx prisma db push --force-reset
 
 *********
 *********
@@ -35,6 +35,9 @@ node .\scripts\seed.ts
 *********
 VSCODE
 Ctrl+D or Ctrl+Shift+L
+**************************
+await new Promise((res) => setTimeout(res, 2000));
+
 **************************
             {new Intl.NumberFormat("he-IL", {
               style: "currency",

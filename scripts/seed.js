@@ -44,11 +44,11 @@ function main() {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, prisma.product.createMany({
                         data: [
-                            { title: "baby cucubers", measure: "GRAM", unit: 400 },
-                            { title: "strawberries", measure: "GRAM", unit: 500 },
-                            { title: "cherry tomato", measure: "BOX", unit: 1 },
-                            { title: "foreign-made blueberries", measure: "BOX", unit: 1 },
-                            { title: "israeli blueberries", measure: "BOX", unit: 1 },
+                            { title: "baby cucubers" },
+                            { title: "strawberries" },
+                            { title: "cherry tomato" },
+                            { title: "foreign-made blueberries" },
+                            { title: "israeli blueberries" },
                         ],
                     })];
                 case 1:
