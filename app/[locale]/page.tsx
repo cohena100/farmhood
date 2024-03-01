@@ -2,9 +2,25 @@ import { getTranslations } from "next-intl/server";
 import { Label, Radio } from "flowbite-react";
 import prismadb from "@/lib/prismadb";
 import { SubmitButton } from "./submit-button";
+import { currentUser } from "@clerk/nextjs";
+import { notFound } from "next/navigation";
 
 export default async function Home() {
+  const user = await currentUser();
+  if (!user) notFound();
   const products = await prismadb.product.findMany();
+  const selection = Object.fromEntries(
+    products.map((product) => [product.id, 0])
+  );
+  const order = await prismadb.order.findUnique({
+    where: { authId: user.id },
+    include: { products: true },
+  });
+  if (order && order.products) {
+    for (const p of order.products) {
+      selection[p.productId] = p.quantity;
+    }
+  }
   const t = await getTranslations("home");
   return (
     <main className="flex flex-col ms-4">
@@ -20,7 +36,7 @@ export default async function Home() {
                   id={product.id + i}
                   name={product.id}
                   value={v}
-                  defaultChecked={i == 0}
+                  defaultChecked={selection[product.id] === i}
                 />
                 <Label htmlFor={product.id + i}>{v}</Label>
               </div>

@@ -22,33 +22,30 @@ export async function submitForm(prevState: any, formData: FormData) {
     return errorState;
   }
   const user = await currentUser();
+  if (!user) {
+    return errorState;
+  }
   try {
-    if (user) {
-      await prismadb.order
-        .delete({ where: { authId: user.id } })
-        .catch(() => {});
-      await prismadb.order.create({
-        data: {
-          authId: user.id,
-          name: user.firstName + " " + user.lastName,
-          email: user.emailAddresses[0].emailAddress,
-          products: {
-            create: Array.from(formData.entries())
-              .filter(([_, q]) => parseInt(q.toString()))
-              .map(([p, q]) => ({
-                quantity: parseInt(q.toString()),
-                product: {
-                  connect: {
-                    id: p,
-                  },
+    await prismadb.order.delete({ where: { authId: user.id } }).catch(() => {});
+    await prismadb.order.create({
+      data: {
+        authId: user.id,
+        name: user.firstName + " " + user.lastName,
+        email: user.emailAddresses[0].emailAddress,
+        products: {
+          create: Array.from(formData.entries())
+            .filter(([_, q]) => parseInt(q.toString()))
+            .map(([p, q]) => ({
+              quantity: parseInt(q.toString()),
+              product: {
+                connect: {
+                  id: p,
                 },
-              })),
-          },
+              },
+            })),
         },
-      });
-    } else {
-      return errorState;
-    }
+      },
+    });
     return {
       success: true,
       message: t("Your order was submitted successfully."),
