@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import prismadb from "./prismadb";
+import prisma from "./prismadb";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@clerk/nextjs";
 
 export async function submitForm(prevState: any, formData: FormData) {
   const t = await getTranslations("home");
-  const products = await prismadb.product.findMany();
+  const products = await prisma.product.findMany();
   const schema = z.object(
     Object.fromEntries(
       products.map((product) => [product.id, z.coerce.number().min(0).max(3)])
@@ -26,8 +26,8 @@ export async function submitForm(prevState: any, formData: FormData) {
     return errorState;
   }
   try {
-    await prismadb.order.delete({ where: { authId: user.id } }).catch(() => {});
-    await prismadb.order.create({
+    await prisma.order.delete({ where: { authId: user.id } }).catch(() => {});
+    await prisma.order.create({
       data: {
         authId: user.id,
         name: user.firstName + " " + user.lastName,

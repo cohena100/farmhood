@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Label, Radio } from "flowbite-react";
-import prismadb from "@/lib/prismadb";
+import prisma from "@/lib/prismadb";
 import { SubmitButton } from "./submit-button";
 import { currentUser } from "@clerk/nextjs";
 import { notFound } from "next/navigation";
@@ -8,11 +8,11 @@ import { notFound } from "next/navigation";
 export default async function Home() {
   const user = await currentUser();
   if (!user) notFound();
-  const products = await prismadb.product.findMany();
+  const products = await prisma.product.findMany();
   const selection = Object.fromEntries(
     products.map((product) => [product.id, 0])
   );
-  const order = await prismadb.order.findUnique({
+  const order = await prisma.order.findUnique({
     where: { authId: user.id },
     include: { products: true },
   });
