@@ -51,7 +51,6 @@ export default async function Home() {
       >
         {t("Paying online for strawberries can be done by clicking this link.")}
       </a>
-      <br />
     </main>
   );
 }
