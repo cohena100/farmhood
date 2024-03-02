@@ -2,7 +2,7 @@
 
 import { submitForm } from "@/lib/actions";
 import { useFormState, useFormStatus } from "react-dom";
-import { Alert, Button, Label } from "flowbite-react";
+import { Alert, Button } from "flowbite-react";
 import { cn } from "@/lib/utils";
 
 const initialState = {
