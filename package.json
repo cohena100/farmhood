@@ -7,6 +7,7 @@
     "build": "i18nexus pull && next build",
     "start": "i18nexus pull && next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "seed": "tsc scripts/seed.ts && node scripts/seed.js",
     "check": "tsc scripts/check.ts && node scripts/check.js"
   },
