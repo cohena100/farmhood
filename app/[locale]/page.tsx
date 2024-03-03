@@ -43,13 +43,15 @@ export default async function Home() {
             ))}
           </fieldset>
         ))}
-        <SubmitButton className="self-start mb-4" label={t("submit")} />
+        <SubmitButton className="self-start mb-4" label={t("Submit")} />
       </form>
       <a
         href="https://meshulam.co.il/s/032b9dc6-2281-6b39-0d44-4f7f83d3c586"
         className="font-medium text-pink-600 dark:text-pink-500 underline my-4"
       >
-        {t("Paying online for strawberries can be done by clicking this link.")}
+        {t(
+          "Paying online for strawberries 🍓🍓can be done by clicking this link."
+        )}
       </a>
     </main>
   );
