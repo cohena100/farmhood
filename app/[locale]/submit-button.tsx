@@ -4,6 +4,7 @@ import { submitForm } from "@/lib/actions";
 import { useFormState, useFormStatus } from "react-dom";
 import { Alert, Button } from "flowbite-react";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const initialState = {
   success: true,
@@ -18,7 +19,17 @@ interface SubmitButtonProps {
 export function SubmitButton({ className, label }: SubmitButtonProps) {
   const [state, formAction] = useFormState(submitForm, initialState);
   const { pending } = useFormStatus();
-
+  const [message, setMessage] = useState(false);
+  useEffect(() => {
+    if (state.message) {
+      setMessage(true);
+      const timeoutId = setTimeout(() => {
+        state.message = "";
+        setMessage(false);
+      }, 5000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [state]);
   return pending ? (
     <Button
       formAction={formAction}
@@ -31,7 +42,7 @@ export function SubmitButton({ className, label }: SubmitButtonProps) {
     </Button>
   ) : (
     <>
-      {state.message && (
+      {message && (
         <Alert
           className="self-start"
           color={state.success ? "success" : "failure"}
