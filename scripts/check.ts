@@ -8,7 +8,7 @@ async function main() {
     products.map((product) => [product.id, 0])
   );
   const order = await prisma.order.findUnique({
-    where: { authId: "user_2cwkL0VUgBxHlJLZWOck84CgHG2" },
+    where: { id: "user_2cwkL0VUgBxHlJLZWOck84CgHG2" },
     include: { products: true },
   });
   if (order && order.products) {
