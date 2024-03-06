@@ -22,8 +22,11 @@ import useTextDirection from "@/lib/hooks";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Farmhood",
-  description: "From the farm to then neighborhood",
+  title: {
+    template: "%s | Farmhood",
+    default: "Farmhood",
+  },
+  description: "From the farm to the neighborhood.",
 };
 
 interface RootLayoutParams {
