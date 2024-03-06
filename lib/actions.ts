@@ -25,13 +25,16 @@ export async function submitForm(prevState: any, formData: FormData) {
   if (!user) {
     return errorState;
   }
+  const { id, firstName, lastName, imageUrl, emailAddresses = [] } = user;
   try {
-    await prisma.order.delete({ where: { authId: user.id } }).catch(() => {});
+    await prisma.order.delete({ where: { id } }).catch(() => {});
     await prisma.order.create({
       data: {
-        authId: user.id,
-        name: user.firstName + " " + user.lastName,
-        email: user.emailAddresses[0].emailAddress,
+        id,
+        firstName,
+        lastName,
+        imageUrl,
+        emailAddresses: emailAddresses.map((email) => email.emailAddress),
         products: {
           create: Array.from(formData.entries())
             .filter(([_, q]) => parseInt(q.toString()))
