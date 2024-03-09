@@ -34,6 +34,15 @@ export async function submitForm(prevState: any, formData: FormData) {
     }
     const { id, firstName, lastName, imageUrl, emailAddresses = [] } = user;
     await prisma.order.delete({ where: { id } }).catch(() => {});
+    const parkingLotId = formData.get("parkingLot")?.toString() ?? "";
+    await prisma.profile.upsert({
+      where: { id },
+      update: { parkingLotId },
+      create: {
+        id,
+        parkingLotId,
+      },
+    });
     await prisma.order.create({
       data: {
         id,
@@ -41,9 +50,10 @@ export async function submitForm(prevState: any, formData: FormData) {
         lastName,
         imageUrl,
         emailAddresses: emailAddresses.map((email) => email.emailAddress),
+        parkingLotId,
         products: {
           create: Array.from(formData.entries())
-            .filter(([_, q]) => parseInt(q.toString()))
+            .filter(([p, q]) => p !== "parkingLot" && parseInt(q.toString()))
             .map(([p, q]) => ({
               quantity: parseInt(q.toString()),
               product: {
@@ -55,20 +65,12 @@ export async function submitForm(prevState: any, formData: FormData) {
         },
       },
     });
-    const parkingLotId = formData.get("parkingLot")?.toString() ?? "";
-    await prisma.profile.upsert({
-      where: { id },
-      update: { parkingLotId },
-      create: {
-        id,
-        parkingLotId,
-      },
-    });
     return {
       success: true,
       message: t("Your order was submitted successfully."),
     };
   } catch (error) {
+    console.log(error);
     return errorState;
   }
 }

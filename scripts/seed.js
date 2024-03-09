@@ -42,37 +42,25 @@ function main() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: 
-                // await prisma.product.createMany({
-                //   data: [
-                //     { title: "Baby cucumbers 🥒400 grams for ₪10" },
-                //     {
-                //       title: "Strawberries 🍓half a kilo for ₪25 or 🍓🍓1 kilo for ₪40",
-                //     },
-                //     { title: "Sweet organic cherry tomatos 🍅for ₪25" },
-                //     {
-                //       title: "Foreign-made blueberries 🫐 for ₪20 or 🫐🫐🫐3 for ₪50",
-                //     },
-                //     { title: "Israeli blueberries 🫐for ₪25" },
-                //   ],
-                // });
-                return [4 /*yield*/, prisma.parkingLot.createMany({
-                        data: [{ name: "Hershko 8" }, { name: "Yuval Naaman 9 parking lot" }],
+                case 0: return [4 /*yield*/, prisma.product.createMany({
+                        data: [
+                            { title: "Baby cucumbers 🥒400 grams for ₪10" },
+                            {
+                                title: "Strawberries 🍓half a kilo for ₪25 or 🍓🍓1 kilo for ₪40",
+                            },
+                            { title: "Sweet organic cherry tomatos 🍅for ₪25" },
+                            {
+                                title: "Foreign-made blueberries 🫐 for ₪20 or 🫐🫐🫐3 for ₪50",
+                            },
+                            { title: "Israeli blueberries 🫐for ₪25" },
+                        ],
                     })];
                 case 1:
-                    // await prisma.product.createMany({
-                    //   data: [
-                    //     { title: "Baby cucumbers 🥒400 grams for ₪10" },
-                    //     {
-                    //       title: "Strawberries 🍓half a kilo for ₪25 or 🍓🍓1 kilo for ₪40",
-                    //     },
-                    //     { title: "Sweet organic cherry tomatos 🍅for ₪25" },
-                    //     {
-                    //       title: "Foreign-made blueberries 🫐 for ₪20 or 🫐🫐🫐3 for ₪50",
-                    //     },
-                    //     { title: "Israeli blueberries 🫐for ₪25" },
-                    //   ],
-                    // });
+                    _a.sent();
+                    return [4 /*yield*/, prisma.parkingLot.createMany({
+                            data: [{ name: "Hershko 8" }, { name: "Yuval Naaman 9 parking lot" }],
+                        })];
+                case 2:
                     _a.sent();
                     return [2 /*return*/];
             }
