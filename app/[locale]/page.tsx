@@ -4,7 +4,6 @@ import prisma from "@/lib/prismadb";
 import { SubmitButton } from "./submit-button";
 import { currentUser } from "@clerk/nextjs";
 import { notFound } from "next/navigation";
-import { ParkingLot } from "@prisma/client";
 
 export default async function Home() {
   const user = await currentUser();
