@@ -4,6 +4,7 @@ import prisma from "@/lib/prismadb";
 import { SubmitButton } from "./submit-button";
 import { currentUser } from "@clerk/nextjs";
 import { notFound } from "next/navigation";
+import { ParkingLot } from "@prisma/client";
 
 export default async function Home() {
   const user = await currentUser();
@@ -22,6 +23,12 @@ export default async function Home() {
       selection[p.productId] = p.quantity;
     }
   }
+  const profile = await prisma.profile.findUnique({
+    where: { id },
+    include: { parkingLot: true },
+  });
+  const parkingLots = await prisma.parkingLot.findMany();
+  const parkingLot = profile ? profile.parkingLot : parkingLots[0];
   const t = await getTranslations("home");
   return (
     <main className="flex flex-col ms-4">
@@ -44,6 +51,22 @@ export default async function Home() {
             ))}
           </fieldset>
         ))}
+        <fieldset className="flex gap-8">
+          <legend className="mb-2">
+            <Label>{t("Collection place")}</Label>
+          </legend>
+          {parkingLots.map((p, i) => (
+            <div key={p.id + i} className="flex items-center gap-2">
+              <Radio
+                id={p.id + i}
+                name="parkingLot"
+                value={p.id}
+                defaultChecked={parkingLot.id === p.id}
+              />
+              <Label htmlFor={p.id + i}>{t(p.name)}</Label>
+            </div>
+          ))}
+        </fieldset>
         <SubmitButton className="self-start mb-4" label={t("Submit")} />
       </form>
       <a
