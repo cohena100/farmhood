@@ -32,7 +32,7 @@ export default async function Home() {
   const phone = profile?.phone;
   const t = await getTranslations("home");
   return (
-    <main className="flex flex-col ms-4">
+    <main className="flex flex-col ms-2">
       <form action="" className="flex flex-col mt-2 gap-8">
         <div>
           <Label htmlFor="name" value={t("First name and last name")} />
@@ -61,17 +61,19 @@ export default async function Home() {
             <legend className="mb-2">
               <Label>{t(product.title)}</Label>
             </legend>
-            {product.options.map((v, i) => (
-              <div key={product.id + i} className="flex items-center gap-2">
-                <Radio
-                  id={product.id + i}
-                  name={product.id}
-                  value={v}
-                  defaultChecked={selection[product.id] === v}
-                />
-                <Label htmlFor={product.id + i}>{v}</Label>
-              </div>
-            ))}
+            <div className="flex gap-4 flex-wrap">
+              {product.options.map((v, i) => (
+                <div key={product.id + i} className="flex items-center gap-2">
+                  <Radio
+                    id={product.id + i}
+                    name={product.id}
+                    value={v}
+                    defaultChecked={selection[product.id] === v}
+                  />
+                  <Label htmlFor={product.id + i}>{v}</Label>
+                </div>
+              ))}
+            </div>
           </fieldset>
         ))}
         <fieldset className="flex gap-8">
