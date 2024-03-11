@@ -44,15 +44,26 @@ function main() {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, prisma.product.createMany({
                         data: [
-                            { title: "Baby cucumbers 🥒400 grams for ₪10" },
                             {
-                                title: "Strawberries 🍓half a kilo for ₪25 or 🍓🍓1 kilo for ₪40",
+                                title: "Strawberries 🍓 half a kilo for ₪20",
+                                options: [0, 1],
                             },
-                            { title: "Sweet organic cherry tomatos 🍅for ₪25" },
                             {
-                                title: "Foreign-made blueberries 🫐 for ₪20 or 🫐🫐🫐3 for ₪50",
+                                title: "Strawberries 🍓🍓 1 kilo for ₪40 (packed in half kilo portions)",
+                                options: [0, 1, 2, 3, 4, 5, 6],
                             },
-                            { title: "Israeli blueberries 🫐for ₪25" },
+                            {
+                                title: "Israeli blueberries 🫐 1 for ₪25 or 🫐🫐🫐 3 for ₪55",
+                                options: [0, 1, 2, 3, 4, 5, 6],
+                            },
+                            {
+                                title: "Foreign-made blueberries 🫐 1 for ₪20 or 🫐🫐🫐 3 for ₪50",
+                                options: [0, 1, 2, 3],
+                            },
+                            {
+                                title: "Cherry Loblo tomatoes 🍅 small basket for ₪25",
+                                options: [0, 1, 2, 3, 4, 5, 6],
+                            },
                         ],
                     })];
                 case 1:

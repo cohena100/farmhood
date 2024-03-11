@@ -23,8 +23,13 @@ export async function submitForm(prevState: any, formData: FormData) {
       })
     ).map(({ id }) => id);
     const schema = z.object({
+      name: z.string().min(2).max(20),
+      phone: z.string().min(10).max(15),
       ...Object.fromEntries(
-        products.map((product) => [product.id, z.coerce.number().min(0).max(3)])
+        products.map((product) => [
+          product.id,
+          z.coerce.number().min(product.options[0]).max(product.options[-1]),
+        ])
       ),
       parkingLot: z.string().refine((id) => parkingLots.includes(id)),
     });
@@ -32,28 +37,36 @@ export async function submitForm(prevState: any, formData: FormData) {
     if (!parse.success) {
       return errorState;
     }
-    const { id, firstName, lastName, imageUrl, emailAddresses = [] } = user;
+    const { id, imageUrl, emailAddresses = [] } = user;
     await prisma.order.delete({ where: { id } }).catch(() => {});
     const parkingLotId = formData.get("parkingLot")?.toString() ?? "";
-    await prisma.profile.upsert({
-      where: { id },
-      update: { parkingLotId },
-      create: {
+    await prisma.profile.delete({ where: { id } }).catch(() => {});
+    const name = formData.get("name")?.toString() ?? "";
+    const phone = formData.get("phone")?.toString() ?? "";
+    await prisma.profile.create({
+      data: {
         id,
+        name,
+        phone,
         parkingLotId,
       },
     });
     await prisma.order.create({
       data: {
         id,
-        firstName,
-        lastName,
+        name,
         imageUrl,
-        emailAddresses: emailAddresses.map((email) => email.emailAddress),
+        phone,
         parkingLotId,
         products: {
           create: Array.from(formData.entries())
-            .filter(([p, q]) => p !== "parkingLot" && parseInt(q.toString()))
+            .filter(
+              ([p, q]) =>
+                p !== "parkingLot" &&
+                p !== "name" &&
+                p !== "phone" &&
+                parseInt(q.toString())
+            )
             .map(([p, q]) => ({
               quantity: parseInt(q.toString()),
               product: {

@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Label, Radio } from "flowbite-react";
+import { Label, Radio, TextInput } from "flowbite-react";
 import prisma from "@/lib/prismadb";
 import { SubmitButton } from "./submit-button";
 import { currentUser } from "@clerk/nextjs";
@@ -28,22 +28,46 @@ export default async function Home() {
   });
   const parkingLots = await prisma.parkingLot.findMany();
   const parkingLot = profile ? profile.parkingLot : parkingLots[0];
+  const name = profile?.name;
+  const phone = profile?.phone;
   const t = await getTranslations("home");
   return (
     <main className="flex flex-col ms-4">
       <form action="" className="flex flex-col mt-2 gap-8">
+        <div>
+          <Label htmlFor="name" value={t("First name and last name")} />
+          <TextInput
+            id="name"
+            name="name"
+            type="text"
+            className="max-w-screen-sm"
+            value={name}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="phone" value={t("Phone number")} />
+          <TextInput
+            id="phone"
+            name="phone"
+            type="tel"
+            value={phone}
+            required
+            className="max-w-screen-sm"
+          />
+        </div>
         {products.map((product) => (
           <fieldset key={product.id} className="flex gap-8">
             <legend className="mb-2">
               <Label>{t(product.title)}</Label>
             </legend>
-            {[0, 1, 2, 3, 4].map((v, i) => (
+            {product.options.map((v, i) => (
               <div key={product.id + i} className="flex items-center gap-2">
                 <Radio
                   id={product.id + i}
                   name={product.id}
                   value={v}
-                  defaultChecked={selection[product.id] === i}
+                  defaultChecked={selection[product.id] === v}
                 />
                 <Label htmlFor={product.id + i}>{v}</Label>
               </div>
@@ -76,6 +100,12 @@ export default async function Home() {
           "Paying online for strawberries 🍓🍓can be done by clicking this link."
         )}
       </a>
+      <Label
+        className="my-4"
+        value={t(
+          "I will arrive on Tuesday around 17:30 at Hershko 8 and then on the public parking space at Yuval Neeman."
+        )}
+      />
     </main>
   );
 }
