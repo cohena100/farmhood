@@ -1,0 +1,22 @@
+[
+  {
+    "id": "user_2dUtwkesnARBgwQEPHWuVjhaA1X",
+    "name": "אבי כהן",
+    "imageUrl": "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yY0xyRllzUjM0Q1Z0VndoUkphMWIzb0dTSjUiLCJyaWQiOiJ1c2VyXzJkVXR3a2VzbkFSQmd3UUVQSFd1VmpoYUExWCIsImluaXRpYWxzIjoi16nXoSJ9",
+    "phone": "0526659557",
+    "parkingLotId": "56432db6-bbb3-40f1-9f0d-71ec4d51483e",
+    "_count": {
+      "products": 5
+    }
+  },
+  {
+    "id": "user_2daSrxoooRr2uuQHBFaED26pwhM",
+    "name": "אילנה אביטל",
+    "imageUrl": "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yY0xyRllzUjM0Q1Z0VndoUkphMWIzb0dTSjUiLCJyaWQiOiJ1c2VyXzJkYVNyeG9vb1JyMnV1UUhCRmFFRDI2cHdoTSJ9",
+    "phone": "0526659557",
+    "parkingLotId": "57703b16-3d79-4d4e-b4d7-8123fa77d4cf",
+    "_count": {
+      "products": 5
+    }
+  }
+]

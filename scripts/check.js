@@ -40,20 +40,25 @@ var client_1 = require("@prisma/client");
 var prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var id, order;
+        var id, orders;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     id = undefined;
-                    return [4 /*yield*/, prisma.order
-                            .findUnique({
-                            where: { id: id },
-                            include: { products: { include: { product: true } }, parkingLot: true },
-                        })
-                            .catch(function () { return undefined; })];
+                    return [4 /*yield*/, prisma.order.findMany({
+                            where: {
+                                products: {
+                                    some: {
+                                        quantity: {
+                                            gt: 4,
+                                        },
+                                    },
+                                },
+                            },
+                        })];
                 case 1:
-                    order = _a.sent();
-                    console.log(order);
+                    orders = _a.sent();
+                    console.log(JSON.stringify(orders));
                     return [2 /*return*/];
             }
         });

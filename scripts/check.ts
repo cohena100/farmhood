@@ -23,13 +23,43 @@ async function main() {
   //   include: { products: { include: { product: true } }, parkingLot: true },
   // });
   // console.log(orders);
-  const order = await prisma.order
-    .findUnique({
-      where: { id },
-      include: { products: { include: { product: true } }, parkingLot: true },
-    })
-    .catch(() => undefined);
-  console.log(order);
+  // const order = await prisma.order
+  //   .findUnique({
+  //     where: { id },
+  //     include: { products: { include: { product: true } }, parkingLot: true },
+  //   })
+  //   .catch(() => undefined);
+  // console.log(order);
+  // const orders = await prisma.order.findMany({
+  //   include: {
+  //     _count: {
+  //       select: { products: true },
+  //     },
+  //   },
+  // });
+  // const result = await prisma.user.findMany({
+  //   where: {
+  //     posts: {
+  //       some: {
+  //         views: {
+  //           gt: 10,
+  //         },
+  //       },
+  //     },
+  //   },
+  // })
+  const orders = await prisma.order.findMany({
+    where: {
+      products: {
+        some: {
+          quantity: {
+            gt: 4,
+          },
+        },
+      },
+    },
+  });
+  console.log(JSON.stringify(orders));
 }
 
 main()
