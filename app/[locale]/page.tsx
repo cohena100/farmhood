@@ -41,7 +41,7 @@ export default async function Home() {
             name="name"
             type="text"
             className="max-w-screen-sm"
-            value={name}
+            defaultValue={name}
             required
           />
         </div>
@@ -51,7 +51,7 @@ export default async function Home() {
             id="phone"
             name="phone"
             type="tel"
-            value={phone}
+            defaultValue={phone}
             required
             className="max-w-screen-sm"
           />
