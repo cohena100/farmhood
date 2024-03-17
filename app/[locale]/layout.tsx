@@ -1,10 +1,21 @@
-import { NextIntlClientProvider, useMessages } from "next-intl";
+import {
+  NextIntlClientProvider,
+  useMessages,
+  useTranslations,
+} from "next-intl";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import {
+  UserButton,
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+} from "@clerk/nextjs";
 import { enUS, deDE, heIL, ruRU } from "@clerk/localizations";
-import { ThemeModeScript } from "flowbite-react";
+import { Button, ThemeModeScript } from "flowbite-react";
 import {
   Flowbite,
   DarkThemeToggle,
@@ -14,7 +25,6 @@ import {
   NavbarCollapse,
   NavbarToggle,
 } from "flowbite-react";
-import { UserButton } from "@clerk/nextjs";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { cn } from "@/lib/utils";
 import useTextDirection from "@/lib/hooks";
@@ -46,7 +56,7 @@ export default function RootLayout({
     he: heIL,
   };
   const direction = useTextDirection(locale);
-
+  const t = useTranslations("home");
   return (
     <ClerkProvider localization={clerkLocale[locale]}>
       <html lang={locale} dir={direction} suppressHydrationWarning>
@@ -71,7 +81,22 @@ export default function RootLayout({
                   </div>
                 </NavbarCollapse>
               </Navbar>
-              {children}
+              <SignedIn>{children}</SignedIn>
+              <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
+                <SignedOut>
+                  <SignUpButton>
+                    <Button gradientDuoTone="pinkToOrange" outline>
+                      {t("One time registration")}
+                    </Button>
+                  </SignUpButton>
+                  <Label>{t("Or")}</Label>
+                  <SignInButton>
+                    <Button gradientDuoTone="tealToLime" outline>
+                      {t("Re-entry")}
+                    </Button>
+                  </SignInButton>
+                </SignedOut>
+              </div>
             </Flowbite>
           </body>
         </NextIntlClientProvider>

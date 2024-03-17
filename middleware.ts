@@ -10,7 +10,7 @@ export default authMiddleware({
   beforeAuth(request) {
     return intlMiddleware(request);
   },
-  publicRoutes: [],
+  publicRoutes: ["/:locale"],
   // debug: true,
 });
 
