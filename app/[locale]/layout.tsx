@@ -82,8 +82,8 @@ export default function RootLayout({
                 </NavbarCollapse>
               </Navbar>
               <SignedIn>{children}</SignedIn>
-              <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
-                <SignedOut>
+              <SignedOut>
+                <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
                   <SignUpButton>
                     <Button gradientDuoTone="pinkToOrange" outline>
                       {t("One time registration")}
@@ -95,8 +95,8 @@ export default function RootLayout({
                       {t("Re-entry")}
                     </Button>
                   </SignInButton>
-                </SignedOut>
-              </div>
+                </div>
+              </SignedOut>
             </Flowbite>
           </body>
         </NextIntlClientProvider>
