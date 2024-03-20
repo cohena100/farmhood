@@ -84,13 +84,13 @@ export default function RootLayout({
               <SignedIn>{children}</SignedIn>
               <SignedOut>
                 <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
-                  <SignUpButton>
+                  <SignUpButton mode="modal">
                     <Button gradientDuoTone="pinkToOrange" outline>
                       {t("One time registration")}
                     </Button>
                   </SignUpButton>
-                  <Label>{t("Or")}</Label>
-                  <SignInButton>
+                  <Label>🍓🥒🫐🍅</Label>
+                  <SignInButton mode="modal">
                     <Button gradientDuoTone="tealToLime" outline>
                       {t("Re-entry")}
                     </Button>
