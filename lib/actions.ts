@@ -37,7 +37,7 @@ export async function submitForm(prevState: any, formData: FormData) {
     if (!parse.success) {
       return errorState;
     }
-    const { id, imageUrl, emailAddresses = [] } = user;
+    const { id, imageUrl } = user;
     await prisma.order.delete({ where: { id } }).catch(() => {});
     const parkingLotId = formData.get("parkingLot")?.toString() ?? "";
     await prisma.profile.delete({ where: { id } }).catch(() => {});

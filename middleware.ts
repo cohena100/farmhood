@@ -11,6 +11,7 @@ export default authMiddleware({
     return intlMiddleware(request);
   },
   publicRoutes: ["/:locale"],
+  ignoredRoutes: ["/api/webhooks(.*)"],
   // debug: true,
 });
 
@@ -18,7 +19,7 @@ export const config = {
   matcher: [
     "/((?!.+\\.[\\w]+$|_next).*)",
     "/",
-    "/(api|trpc)(.*)",
+    // "/(api|trpc)(.*)",
     "/(en|de|ru|he)/:path*",
   ],
 };
