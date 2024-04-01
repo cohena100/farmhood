@@ -23,6 +23,8 @@ export async function submitForm(prevState: any, formData: FormData) {
       })
     ).map(({ id }) => id);
     const schema = z.object({
+      name: z.string().min(2).max(20),
+      phone: z.string().min(10).max(15),
       ...Object.fromEntries(
         products.map((product) => [
           product.id,
@@ -35,16 +37,12 @@ export async function submitForm(prevState: any, formData: FormData) {
     if (!parse.success) {
       return errorState;
     }
-    const { id, imageUrl, firstName, lastName, phoneNumbers } = user;
+    const { id, imageUrl } = user;
     await prisma.order.delete({ where: { id } }).catch(() => {});
     const parkingLotId = formData.get("parkingLot")?.toString() ?? "";
     await prisma.profile.delete({ where: { id } }).catch(() => {});
-    const name = firstName + " " + lastName;
-    const phone =
-      "0" +
-      phoneNumbers[0].phoneNumber.substring(
-        phoneNumbers[0].phoneNumber.length - 9
-      );
+    const name = formData.get("name")?.toString() ?? "";
+    const phone = formData.get("phone")?.toString() ?? "";
     await prisma.profile.create({
       data: {
         id,

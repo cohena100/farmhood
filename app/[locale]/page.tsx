@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Label, Radio } from "flowbite-react";
+import { Label, Radio, TextInput } from "flowbite-react";
 import prisma from "@/lib/prismadb";
 import { SubmitButton } from "./submit-button";
 import { currentUser } from "@clerk/nextjs";
@@ -28,10 +28,34 @@ export default async function Home() {
   });
   const parkingLots = await prisma.parkingLot.findMany();
   const parkingLot = profile ? profile.parkingLot : parkingLots[0];
+  const name = profile?.name;
+  const phone = profile?.phone;
   const t = await getTranslations("home");
   return (
     <main className="flex flex-col ms-2">
       <form action="" className="flex flex-col mt-2 gap-8">
+        <div>
+          <Label htmlFor="name" value={t("First name and last name")} />
+          <TextInput
+            id="name"
+            name="name"
+            type="text"
+            className="max-w-screen-sm"
+            defaultValue={name}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="phone" value={t("Phone number")} />
+          <TextInput
+            id="phone"
+            name="phone"
+            type="tel"
+            defaultValue={phone}
+            required
+            className="max-w-screen-sm"
+          />
+        </div>
         {products.map((product) => (
           <fieldset key={product.id} className="flex gap-8">
             <legend className="mb-2">
