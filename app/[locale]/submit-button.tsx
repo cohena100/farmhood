@@ -30,17 +30,7 @@ export function SubmitButton({ className, label }: SubmitButtonProps) {
       return () => clearTimeout(timeoutId);
     }
   }, [state]);
-  return pending ? (
-    <Button
-      formAction={formAction}
-      className={cn(className)}
-      aria-disabled
-      isProcessing
-      gradientDuoTone="pinkToOrange"
-    >
-      {label}
-    </Button>
-  ) : (
+  return (
     <>
       {message && (
         <Alert
@@ -55,6 +45,8 @@ export function SubmitButton({ className, label }: SubmitButtonProps) {
         formAction={formAction}
         gradientDuoTone="pinkToOrange"
         className={cn(className)}
+        aria-disabled={pending}
+        isProcessing={pending}
       >
         {label}
       </Button>
