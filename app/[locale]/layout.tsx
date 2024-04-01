@@ -29,7 +29,7 @@ import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { cn } from "@/lib/utils";
 import useTextDirection from "@/lib/hooks";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], preload: true });
 
 export const metadata: Metadata = {
   title: {
