@@ -32,7 +32,7 @@ export default async function Home() {
   const phone = profile?.phone;
   const t = await getTranslations("home");
   return (
-    <main className="flex flex-col ms-2">
+    <main className="flex flex-col ms-4">
       <form action="" className="flex flex-col mt-2 gap-8">
         <div>
           <Label htmlFor="name" value={t("First name and last name")} />
