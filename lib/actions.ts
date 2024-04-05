@@ -37,47 +37,68 @@ export async function submitForm(prevState: any, formData: FormData) {
     if (!parse.success) {
       return errorState;
     }
-    const { id, imageUrl } = user;
-    await prisma.order.delete({ where: { id } }).catch(() => {});
-    const parkingLotId = formData.get("parkingLot")?.toString() ?? "";
-    await prisma.profile.delete({ where: { id } }).catch(() => {});
-    const name = formData.get("name")?.toString() ?? "";
-    const phone = formData.get("phone")?.toString() ?? "";
+    const { id: userId, imageUrl } = user;
+    const parkingLotId = formData.get("parkingLot")!.toString();
+    const name = formData.get("name")?.toString()!;
+    const phone = formData.get("phone")?.toString()!;
+    await prisma.profile.delete({ where: { id: userId } }).catch(() => {});
     await prisma.profile.create({
       data: {
-        id,
+        id: userId,
         name,
         phone,
         parkingLotId,
       },
     });
-    await prisma.order.create({
-      data: {
-        id,
-        name,
-        imageUrl,
-        phone,
-        parkingLotId,
-        products: {
-          create: Array.from(formData.entries())
-            .filter(
-              ([p, q]) =>
-                p !== "parkingLot" &&
-                p !== "name" &&
-                p !== "phone" &&
-                parseInt(q.toString())
-            )
-            .map(([p, q]) => ({
-              quantity: parseInt(q.toString()),
-              product: {
-                connect: {
-                  id: p,
-                },
-              },
-            })),
+    const selectedProducts = Array.from(formData.entries())
+      .filter(
+        ([p, q]) =>
+          p !== "parkingLot" &&
+          p !== "name" &&
+          p !== "phone" &&
+          parseInt(q.toString())
+      )
+      .map(([p, q]) => ({
+        quantity: parseInt(q.toString()),
+        product: {
+          connect: {
+            id: p,
+          },
         },
-      },
+      }));
+    const order = await prisma.order.findFirst({
+      where: { userId, status: "OPEN" },
     });
+    if (order) {
+      await prisma.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          name,
+          phone,
+          parkingLotId,
+          products: {
+            deleteMany: {},
+            create: selectedProducts,
+          },
+        },
+      });
+    } else {
+      await prisma.order.create({
+        data: {
+          userId,
+          name,
+          imageUrl,
+          phone,
+          parkingLotId,
+          status: "OPEN",
+          products: {
+            create: selectedProducts,
+          },
+        },
+      });
+    }
     return {
       success: true,
       message: t("Your order was submitted successfully."),

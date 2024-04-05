@@ -8,22 +8,22 @@ import { notFound } from "next/navigation";
 export default async function Home() {
   const user = await currentUser();
   if (!user) notFound();
-  const { id } = user;
+  const { id: userId } = user;
   const products = await prisma.product.findMany();
   const selection = Object.fromEntries(
     products.map((product) => [product.id, 0])
   );
-  const order = await prisma.order.findUnique({
-    where: { id },
+  const order = await prisma.order.findFirst({
+    where: { userId, status: "OPEN" },
     include: { products: true },
   });
-  if (order && order.products) {
+  if (order) {
     for (const p of order.products) {
       selection[p.productId] = p.quantity;
     }
   }
   const profile = await prisma.profile.findUnique({
-    where: { id },
+    where: { id: userId },
     include: { parkingLot: true },
   });
   const parkingLots = await prisma.parkingLot.findMany();
