@@ -4,8 +4,13 @@ import { z } from "zod";
 import prisma from "./prismadb";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@clerk/nextjs";
+import { Status } from "@prisma/client";
 
-export async function submitForm(prevState: any, formData: FormData) {
+export async function actionForm(
+  status: Status,
+  prevState: any,
+  formData: FormData
+) {
   const t = await getTranslations("home");
   const errorState = {
     success: false,
@@ -78,6 +83,7 @@ export async function submitForm(prevState: any, formData: FormData) {
           name,
           phone,
           parkingLotId,
+          status: status,
           products: {
             deleteMany: {},
             create: selectedProducts,
@@ -92,7 +98,7 @@ export async function submitForm(prevState: any, formData: FormData) {
           imageUrl,
           phone,
           parkingLotId,
-          status: "OPEN",
+          status: status,
           products: {
             create: selectedProducts,
           },

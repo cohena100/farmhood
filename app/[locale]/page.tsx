@@ -1,9 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { Label, Radio, TextInput } from "flowbite-react";
 import prisma from "@/lib/prismadb";
-import { SubmitButton } from "./submit-button";
 import { currentUser } from "@clerk/nextjs";
 import { notFound } from "next/navigation";
+import { FormButtons } from "./form-buttons";
 
 export default async function Home() {
   const user = await currentUser();
@@ -33,7 +33,7 @@ export default async function Home() {
   const t = await getTranslations("home");
   return (
     <main className="flex flex-col ms-4">
-      <form action="" className="flex flex-col mt-2 gap-8">
+      <form className="flex flex-col mt-2 gap-8">
         <div>
           <Label htmlFor="name" value={t("First name and last name")} />
           <TextInput
@@ -92,7 +92,7 @@ export default async function Home() {
             </div>
           ))}
         </fieldset>
-        <SubmitButton className="self-start mb-4" label={t("Submit")} />
+        <FormButtons />
       </form>
       <a
         href="https://meshulam.co.il/s/032b9dc6-2281-6b39-0d44-4f7f83d3c586"
