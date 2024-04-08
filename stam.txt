@@ -39,6 +39,7 @@ node .\scripts\seed.ts
 *********
 VSCODE
 Ctrl+D or Ctrl+Shift+L
+Fold All (Ctrl+K Ctrl+0) folds all regions in the editor. Unfold All (Ctrl+K Ctrl+J) unfolds all regions in the editor.
 **************************
 await new Promise((res) => setTimeout(res, 2000));
 
@@ -58,13 +59,3 @@ user_2dUWiVWCl3Xeb9nTQj6I7kZNmyf
 user_2dUQIu5mQHsHVQL3jFf4TaRQ3Gj
 user_2eGJ2mN462M9TK11kSyhFril3Dm
 ***************************
-  console.log("avic:", Array.from(data?.entries() || []));
-  const status = formData.get("action")?.toString() === "pay" ? "PAID" : "OPEN";
-  const orderAction = async (prevState: any, formData: FormData) => {
-    formData.append("action", "order");
-    return await payOrOrderForm(prevState, formData);
-  };
-  const payAction = async (prevState: any, formData: FormData) => {
-    formData.append("action", "pay");
-    return await payOrOrderForm(prevState, formData);
-  };

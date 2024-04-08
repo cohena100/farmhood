@@ -5,6 +5,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Alert, Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { NewOrderButton } from "./new-order-button";
 
 const initialState = {
   success: false,
@@ -41,7 +42,7 @@ export function FormButtons({}: SubmitButtonProps) {
       {isMessage && (
         <Alert
           className="self-start"
-          color={orderForm.success ? "success" : "failure"}
+          color={orderForm.success || payForm.success ? "success" : "failure"}
         >
           {orderForm.message || payForm.message}
         </Alert>
@@ -52,12 +53,14 @@ export function FormButtons({}: SubmitButtonProps) {
             type="submit"
             formAction={orderFormAction}
             gradientDuoTone="pinkToOrange"
-            aria-disabled
+            disabled
             isProcessing
           >
             {t("Please wait")}
           </Button>
         </div>
+      ) : payForm.success ? (
+        <NewOrderButton message="" />
       ) : (
         <div className="flex gap-x-16">
           <Button

@@ -5,6 +5,8 @@ import prisma from "./prismadb";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@clerk/nextjs";
 import { Status } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function actionForm(
   status: Status,
@@ -107,10 +109,55 @@ export async function actionForm(
     }
     return {
       success: true,
-      message: t("Your order was submitted successfully."),
+      message:
+        status === "OPEN"
+          ? t("Your order was submitted successfully.")
+          : t("Your order was paid successfully."),
     };
   } catch (error) {
     console.log(error);
     return errorState;
   }
+}
+
+export async function newOrder() {
+  const t = await getTranslations("home");
+  const errorState = {
+    success: false,
+    message: t("There was an error. Please try again later."),
+  };
+  const user = await currentUser();
+  if (!user) {
+    return errorState;
+  }
+  const { id: userId, imageUrl } = user;
+  const profile = await prisma.profile.findUnique({
+    where: { id: userId },
+    include: { parkingLot: true },
+  });
+  const parkingLotId = profile!.parkingLot.id;
+  const name = profile!.name;
+  const phone = profile!.phone;
+  try {
+    const order = await prisma.order.findFirst({
+      where: { userId, status: "OPEN" },
+    });
+    if (!order) {
+      await prisma.order.create({
+        data: {
+          userId,
+          name,
+          imageUrl,
+          phone,
+          parkingLotId,
+          status: "OPEN",
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return errorState;
+  }
+  revalidatePath("/[locale]/", "page");
+  redirect("/[locale]/");
 }
