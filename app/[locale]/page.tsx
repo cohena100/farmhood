@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Label, Radio, TextInput } from "flowbite-react";
+import { Label, Radio, TextInput, Tooltip } from "flowbite-react";
 import prisma from "@/lib/prismadb";
 import { currentUser } from "@clerk/nextjs";
 import { notFound } from "next/navigation";
@@ -99,24 +99,24 @@ export default async function Home() {
               </div>
             ))}
           </div>
-          {order?.status === "OPEN" && <FormButtons />}
+          {order?.status === "OPEN" && (
+            <Tooltip
+              content={t(
+                "The buttons along with the alert are the only client componets of this page. The rest are server side rendered."
+              )}
+            >
+              <FormButtons />
+            </Tooltip>
+          )}
         </fieldset>
       </form>
       {order?.status === "PAID" && (
         <NewOrderButton message={t("Your order was paid successfully.")} />
       )}
-      <a
-        href="https://meshulam.co.il/s/032b9dc6-2281-6b39-0d44-4f7f83d3c586"
-        className="font-medium text-pink-600 dark:text-pink-500 underline my-4"
-      >
-        {t(
-          "Paying online for strawberries 🍓🍓can be done by clicking this link."
-        )}
-      </a>
       <Label
         className="my-4"
         value={t(
-          "I will arrive on Tuesday around 17:30 at Hershko 8 and then on the public parking space at Yuval Neeman."
+          "I will arrive on Tuesday around 17:30 at Weizmann 12 and then on the public parking space at Gordon 9."
         )}
       />
     </main>

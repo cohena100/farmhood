@@ -69,7 +69,7 @@ export default function RootLayout({
               <Navbar fluid border>
                 <NavbarBrand>
                   <Label className=" text-xl font-semibold text-pink-600 dark:text-pink-600">
-                    תותים משק אריאל במדע🍓🍓🍓
+                    משק אביהו🍓🥒🫐🍅
                   </Label>
                 </NavbarBrand>
                 <NavbarToggle />

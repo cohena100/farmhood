@@ -47,14 +47,22 @@ function main() {
                     id = undefined;
                     return [4 /*yield*/, prisma.order.findMany({
                             where: {
-                                products: {
-                                    some: {
-                                        quantity: {
-                                            gt: 4,
-                                        },
+                                parkingLotId: id,
+                                OR: [
+                                    {
+                                        status: client_1.Status.OPEN,
                                     },
-                                },
+                                    {
+                                        status: client_1.Status.PAID,
+                                    },
+                                ],
                             },
+                            include: { products: { include: { product: true } }, parkingLot: true },
+                            orderBy: [
+                                {
+                                    name: "asc",
+                                },
+                            ],
                         })];
                 case 1:
                     orders = _a.sent();

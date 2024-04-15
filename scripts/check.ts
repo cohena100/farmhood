@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Status } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -48,16 +48,53 @@ async function main() {
   //     },
   //   },
   // })
+  // const orders = await prisma.order.findMany({
+  //   where: {
+  //     products: {
+  //       some: {
+  //         quantity: {
+  //           gt: 4,
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
+  // const orders = await prisma.order.findMany({
+  //   where: {
+  //     OR: [
+  //       {
+  //         status: Status.OPEN,
+  //       },
+  //       {
+  //         status: Status.PAID,
+  //       },
+  //     ],
+  //   },
+  //   include: { products: { include: { product: true } }, parkingLot: true },
+  //   orderBy: [
+  //     {
+  //       name: "asc",
+  //     },
+  //   ],
+  // });
   const orders = await prisma.order.findMany({
     where: {
-      products: {
-        some: {
-          quantity: {
-            gt: 4,
-          },
+      parkingLotId: id,
+      OR: [
+        {
+          status: Status.OPEN,
         },
-      },
+        {
+          status: Status.PAID,
+        },
+      ],
     },
+    include: { products: { include: { product: true } }, parkingLot: true },
+    orderBy: [
+      {
+        name: "asc",
+      },
+    ],
   });
   console.log(JSON.stringify(orders));
 }
