@@ -99,7 +99,7 @@ export default async function Home() {
               </div>
             ))}
           </div>
-          {order?.status === "OPEN" && (
+          {(!order || order?.status === "OPEN") && (
             <Tooltip
               content={t(
                 "The buttons along with the alert are the only client componets of this page. The rest are server side rendered."
