@@ -20,8 +20,12 @@ export default async function Home() {
   });
   if (!order) {
     order = await prisma.order.findFirst({
+      orderBy: {
+        updatedAt: "desc",
+      },
       where: { userId, status: "PAID" },
       include: { products: true },
+      take: 1,
     });
   }
   if (order) {
