@@ -6,10 +6,6 @@ async function main() {
   await prisma.product.createMany({
     data: [
       {
-        title: "Strawberries 🍓 half a kilo for ₪20",
-        options: [0, 1],
-      },
-      {
         title:
           "Strawberries 🍓🍓 1 kilo for ₪40 (packed in half kilo portions)",
         options: [0, 1, 2, 3, 4, 5, 6],
@@ -29,7 +25,7 @@ async function main() {
     ],
   });
   await prisma.parkingLot.createMany({
-    data: [{ name: "Hershko 8" }, { name: "Yuval Naaman 9 parking lot" }],
+    data: [{ name: "Weizmann 12" }, { name: "Gordon 9 parking lot" }],
   });
 }
 
