@@ -1,8 +1,4 @@
-import {
-  NextIntlClientProvider,
-  useMessages,
-  useTranslations,
-} from "next-intl";
+import { NextIntlClientProvider, useMessages } from "next-intl";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
@@ -12,7 +8,6 @@ import { ThemeModeScript } from "flowbite-react";
 import {
   Flowbite,
   DarkThemeToggle,
-  Label,
   Navbar,
   NavbarBrand,
   NavbarCollapse,
@@ -21,6 +16,7 @@ import {
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { cn } from "@/lib/utils";
 import useTextDirection from "@/lib/hooks";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"], preload: true });
 
@@ -49,7 +45,6 @@ export default function RootLayout({
     he: heIL,
   };
   const direction = useTextDirection(locale);
-  const t = useTranslations("home");
   return (
     <ClerkProvider localization={clerkLocale[locale]}>
       <html lang={locale} dir={direction} suppressHydrationWarning>
@@ -60,10 +55,10 @@ export default function RootLayout({
           <body className={cn("dark:bg-gray-900", inter.className)}>
             <Flowbite>
               <Navbar fluid border>
-                <NavbarBrand>
-                  <Label className=" text-xl font-semibold text-pink-600 dark:text-pink-600">
+                <NavbarBrand as={Link} href="/">
+                  <span className=" text-xl font-semibold text-pink-600 dark:text-pink-600">
                     משק אביהו🍓🥒🫐🍅
-                  </Label>
+                  </span>
                 </NavbarBrand>
                 <NavbarToggle />
                 <NavbarCollapse>
