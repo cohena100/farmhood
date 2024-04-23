@@ -6,16 +6,9 @@ import {
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
-import {
-  UserButton,
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-} from "@clerk/nextjs";
+import { UserButton, ClerkProvider } from "@clerk/nextjs";
 import { enUS, deDE, heIL, ruRU } from "@clerk/localizations";
-import { Button, ThemeModeScript } from "flowbite-react";
+import { ThemeModeScript } from "flowbite-react";
 import {
   Flowbite,
   DarkThemeToggle,
@@ -81,22 +74,7 @@ export default function RootLayout({
                   </div>
                 </NavbarCollapse>
               </Navbar>
-              <SignedIn>{children}</SignedIn>
-              <SignedOut>
-                <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
-                  <SignUpButton mode="modal">
-                    <Button gradientDuoTone="pinkToOrange" outline>
-                      {t("One time registration")}
-                    </Button>
-                  </SignUpButton>
-                  <Label>🍓🥒🫐🍅</Label>
-                  <SignInButton mode="modal">
-                    <Button gradientDuoTone="tealToLime" outline>
-                      {t("Re-entry")}
-                    </Button>
-                  </SignInButton>
-                </div>
-              </SignedOut>
+              {children}
             </Flowbite>
           </body>
         </NextIntlClientProvider>

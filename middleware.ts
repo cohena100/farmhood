@@ -10,7 +10,7 @@ export default authMiddleware({
   beforeAuth(request) {
     return intlMiddleware(request);
   },
-  publicRoutes: ["/:locale"],
+  publicRoutes: ["/:locale","/:locale/order"],
   ignoredRoutes: ["/api/webhooks(.*)"],
   // debug: true,
 });

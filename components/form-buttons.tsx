@@ -6,22 +6,25 @@ import { Alert, Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { NewOrderButton } from "./new-order-button";
+import { Status } from "@prisma/client";
 
 const initialState = {
   success: false,
   message: "",
 };
 
-interface SubmitButtonProps {}
+interface SubmitButtonProps {
+  orderId: string;
+}
 
-export function FormButtons({}: SubmitButtonProps) {
+export function FormButtons({ orderId }: SubmitButtonProps) {
   const t = useTranslations("home");
   const [orderForm, orderFormAction] = useFormState(
-    actionForm.bind(null, "OPEN"),
+    actionForm.bind(null, orderId, Status.OPEN),
     initialState
   );
   const [payForm, payFormAction] = useFormState(
-    actionForm.bind(null, "PAID"),
+    actionForm.bind(null, orderId, Status.PAID),
     initialState
   );
   const { pending } = useFormStatus();

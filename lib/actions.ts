@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function actionForm(
+  orderId: string,
   status: Status,
   prevState: any,
   formData: FormData
@@ -18,10 +19,6 @@ export async function actionForm(
     success: false,
     message: t("There was an error. Please try again later."),
   };
-  const user = await currentUser();
-  if (!user) {
-    return errorState;
-  }
   try {
     const products = await prisma.product.findMany();
     const parkingLots = (
@@ -44,19 +41,26 @@ export async function actionForm(
     if (!parse.success) {
       return errorState;
     }
-    const { id: userId, imageUrl } = user;
+    const user = await currentUser();
     const parkingLotId = formData.get("parkingLot")!.toString();
     const name = formData.get("name")?.toString()!;
     const phone = formData.get("phone")?.toString()!;
-    await prisma.profile.delete({ where: { id: userId } }).catch(() => {});
-    await prisma.profile.create({
-      data: {
-        id: userId,
-        name,
-        phone,
-        parkingLotId,
-      },
-    });
+    if (user) {
+      await prisma.profile.upsert({
+        where: { id: user.id },
+        update: {
+          name,
+          phone,
+          parkingLotId,
+        },
+        create: {
+          id: user.id,
+          name,
+          phone,
+          parkingLotId,
+        },
+      });
+    }
     const selectedProducts = Array.from(formData.entries())
       .filter(
         ([p, q]) =>
@@ -73,8 +77,8 @@ export async function actionForm(
           },
         },
       }));
-    const order = await prisma.order.findFirst({
-      where: { userId, status: "OPEN" },
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
     });
     if (order) {
       await prisma.order.update({
@@ -88,20 +92,6 @@ export async function actionForm(
           status: status,
           products: {
             deleteMany: {},
-            create: selectedProducts,
-          },
-        },
-      });
-    } else {
-      await prisma.order.create({
-        data: {
-          userId,
-          name,
-          imageUrl,
-          phone,
-          parkingLotId,
-          status: status,
-          products: {
             create: selectedProducts,
           },
         },
@@ -158,6 +148,6 @@ export async function newOrder() {
     console.log(error);
     return errorState;
   }
-  revalidatePath("/[locale]/", "page");
-  redirect("/[locale]/");
+  revalidatePath("/[locale]/order", "page");
+  redirect("/[locale]/order");
 }
