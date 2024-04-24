@@ -7,6 +7,7 @@ import { currentUser } from "@clerk/nextjs";
 import { Status } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export async function actionForm(
   orderId: string,
@@ -80,23 +81,28 @@ export async function actionForm(
     const order = await prisma.order.findUnique({
       where: { id: orderId },
     });
-    if (order) {
-      await prisma.order.update({
-        where: {
-          id: order.id,
+    if (!order) return errorState;
+    await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        name,
+        phone,
+        imageUrl: user?.imageUrl ?? "",
+        parkingLotId,
+        status: status,
+        userId: user?.id,
+        products: {
+          deleteMany: {},
+          create: selectedProducts,
         },
-        data: {
-          name,
-          phone,
-          parkingLotId,
-          status: status,
-          products: {
-            deleteMany: {},
-            create: selectedProducts,
-          },
-        },
-      });
-    }
+      },
+    });
+    cookies().set("order", orderId);
+    cookies().set("name", name);
+    cookies().set("phone", phone);
+    cookies().set("parkingLotId", parkingLotId);
     return {
       success: true,
       message:
@@ -117,37 +123,47 @@ export async function newOrder() {
     message: t("There was an error. Please try again later."),
   };
   const user = await currentUser();
-  if (!user) {
-    return errorState;
-  }
-  const { id: userId, imageUrl } = user;
-  const profile = await prisma.profile.findUnique({
-    where: { id: userId },
-    include: { parkingLot: true },
-  });
-  const parkingLotId = profile!.parkingLot.id;
-  const name = profile!.name;
-  const phone = profile!.phone;
   try {
-    const order = await prisma.order.findFirst({
-      where: { userId, status: "OPEN" },
-    });
-    if (!order) {
-      await prisma.order.create({
+    const profile =
+      user &&
+      (await prisma.profile.findUnique({
+        where: { id: user.id },
+        include: { parkingLot: true },
+      }));
+    const parkingLots = (
+      await prisma.parkingLot.findMany({
+        select: { id: true },
+      })
+    ).map(({ id }) => id);
+    const parkingLotId =
+      profile?.parkingLot.id ||
+      cookies().get("parkingLotId")?.value ||
+      parkingLots[0];
+    const name = profile?.name || cookies().get("name")?.value || "";
+    const phone = profile?.phone || cookies().get("phone")?.value || "";
+    let order =
+      (user &&
+        (await prisma.order.findFirst({
+          where: { userId: user.id, status: "OPEN" },
+        }))) ||
+      (await prisma.order.create({
         data: {
-          userId,
+          userId: user?.id,
           name,
-          imageUrl,
+          imageUrl: user?.imageUrl ?? "",
           phone,
           parkingLotId,
           status: "OPEN",
         },
-      });
-    }
+      }));
+    cookies().set("order", order.id);
+    cookies().set("name", name);
+    cookies().set("phone", phone);
+    cookies().set("parkingLotId", parkingLotId);
   } catch (error) {
     console.log(error);
     return errorState;
   }
   revalidatePath("/[locale]/order", "page");
-  redirect("/[locale]/order");
+  redirect("/order");
 }

@@ -4,52 +4,61 @@ import prisma from "@/lib/prismadb";
 import { currentUser } from "@clerk/nextjs";
 import { FormButtons } from "@/components/form-buttons";
 import { NewOrderButton } from "@/components/new-order-button";
-import { Prisma, Status } from "@prisma/client";
+import { Status } from "@prisma/client";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default async function Home() {
-  let order: Prisma.OrderGetPayload<{
-    include: { products: true };
-  }> | null;
-  const parkingLots = await prisma.parkingLot.findMany();
   const user = await currentUser();
-  const profile = user
-    ? await prisma.profile.findUnique({
-        where: { id: user.id },
-        include: { parkingLot: true },
-      })
-    : null;
-  const parkingLot = profile ? profile.parkingLot : parkingLots[0];
-  const name = profile?.name ?? "";
-  const phone = profile?.phone ?? "";
+  const parkingLots = await prisma.parkingLot.findMany();
+  const profile =
+    user &&
+    (await prisma.profile.findUnique({
+      where: { id: user.id },
+      include: { parkingLot: true },
+    }));
+  const parkingLotId =
+    profile?.parkingLot.id ||
+    cookies().get("parkingLotId")?.value ||
+    parkingLots[0].id;
+  const name = profile?.name || cookies().get("name")?.value || "";
+  const phone = profile?.phone || cookies().get("phone")?.value || "";
   const imageUrl = user?.imageUrl ?? "";
-  if (!user) {
-    order = await prisma.order.create({
-      data: {
-        name,
-        imageUrl,
-        phone,
-        parkingLotId: parkingLot.id,
-        status: Status.OPEN,
-        products: {
-          create: [],
-        },
-      },
+  const orderId = cookies().get("order")?.value;
+  let order =
+    orderId &&
+    (await prisma.order.findUnique({
+      where: { id: orderId },
       include: { products: true },
-    });
-  } else {
-    order = await prisma.order.findFirst({
-      where: { userId: user.id, status: Status.OPEN },
-      include: { products: true },
-    });
-    if (!order) {
-      order = await prisma.order.findFirst({
-        orderBy: {
-          updatedAt: "desc",
+    }));
+  if (!order) {
+    if (user) {
+      order =
+        (await prisma.order.findFirst({
+          where: { userId: user.id, status: Status.OPEN },
+          include: { products: true },
+        })) ||
+        (await prisma.order.findFirst({
+          orderBy: {
+            updatedAt: "desc",
+          },
+          where: { userId: user.id, status: Status.PAID },
+          include: { products: true },
+          take: 1,
+        }));
+    } else {
+      await prisma.order.create({
+        data: {
+          name,
+          imageUrl,
+          phone,
+          parkingLotId,
+          status: Status.OPEN,
+          products: {
+            create: [],
+          },
         },
-        where: { userId: user.id, status: Status.PAID },
         include: { products: true },
-        take: 1,
       });
     }
   }
@@ -117,7 +126,7 @@ export default async function Home() {
                   id={p.id + i}
                   name="parkingLot"
                   value={p.id}
-                  defaultChecked={parkingLot.id === p.id}
+                  defaultChecked={parkingLotId === p.id}
                 />
                 <Label htmlFor={p.id + i}>{t(p.name)}</Label>
               </div>
