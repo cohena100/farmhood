@@ -47,7 +47,7 @@ export default async function Home() {
           take: 1,
         }));
     } else {
-      await prisma.order.create({
+      order = await prisma.order.create({
         data: {
           name,
           imageUrl,
