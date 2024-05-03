@@ -2,7 +2,7 @@ import { NextIntlClientProvider, useMessages } from "next-intl";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
-import { UserButton, ClerkProvider } from "@clerk/nextjs";
+import { UserButton, ClerkProvider, ClerkLoaded } from "@clerk/nextjs";
 import { enUS, deDE, heIL, ruRU } from "@clerk/localizations";
 import { ThemeModeScript } from "flowbite-react";
 import {
@@ -69,7 +69,7 @@ export default function RootLayout({
                   </div>
                 </NavbarCollapse>
               </Navbar>
-              {children}
+              <ClerkLoaded>{children}</ClerkLoaded>
             </Flowbite>
           </body>
         </NextIntlClientProvider>

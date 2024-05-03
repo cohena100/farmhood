@@ -14,10 +14,12 @@
   "dependencies": {
     "@clerk/localizations": "^1.26.15",
     "@clerk/nextjs": "^4.29.7",
+    "@gsap/react": "^2.1.1",
     "@prisma/client": "^5.11.0",
     "clsx": "^2.1.0",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.7.2",
+    "gsap": "^3.12.5",
     "next": "14.1.0",
     "next-intl": "^3.7.0",
     "react": "^18",
