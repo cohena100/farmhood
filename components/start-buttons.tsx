@@ -8,17 +8,19 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
+import useTextDirection from "@/lib/hooks";
 
 export default function StartButtons() {
   const t = useTranslations("home");
   gsap.registerPlugin(useGSAP);
+  const direction = useTextDirection();
   const container = useRef(null);
   useGSAP(
     () => {
       gsap
         .timeline()
         .from(".buttons", {
-          x: -100,
+          x: direction === "rtl" ? -100 : 100,
           duration: 2,
           autoAlpha: 0,
           stagger: 0.5,
@@ -26,7 +28,12 @@ export default function StartButtons() {
         })
         .from(
           ".separators",
-          { x: 100, duration: 2, autoAlpha: 0, ease: "back" },
+          {
+            x: direction === "rtl" ? 100 : -100,
+            duration: 2,
+            autoAlpha: 0,
+            ease: "back",
+          },
           0
         );
     },
