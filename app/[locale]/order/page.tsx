@@ -72,7 +72,7 @@ export default async function Home() {
   }
   const t = await getTranslations("home");
   return (
-    <main className="flex flex-col ms-4">
+    <main className="flex flex-col ms-4 invisible">
       <form>
         <fieldset
           disabled={order.status === Status.PAID}

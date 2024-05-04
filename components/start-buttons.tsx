@@ -41,27 +41,27 @@ export default function StartButtons() {
   );
   return (
     <div ref={container}>
-      <div className="buttons" style={{ visibility: "hidden" }}>
+      <div className="buttons invisible">
         <SignUpButton mode="modal">
           <Button gradientDuoTone="pinkToOrange" outline>
             {t("One time registration")}
           </Button>
         </SignUpButton>
       </div>
-      <div className="separators" style={{ visibility: "hidden" }}>
+      <div className="separators invisible">
         <Label>🍓🥒🫐🍅</Label>
       </div>
-      <div className="buttons" style={{ visibility: "hidden" }}>
+      <div className="buttons invisible">
         <SignInButton mode="modal">
           <Button gradientDuoTone="tealToLime" outline>
             {t("Re-entry")}
           </Button>
         </SignInButton>
       </div>
-      <div className="separators" style={{ visibility: "hidden" }}>
+      <div className="separators invisible">
         <Label>🍓🥒🫐🍅</Label>
       </div>
-      <div className="buttons" style={{ visibility: "hidden" }}>
+      <div className="buttons invisible">
         <ContinueButton label={t("Continue")} />
       </div>
     </div>
