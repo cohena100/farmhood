@@ -44,7 +44,7 @@ export function FormButtons({ orderId }: SubmitButtonProps) {
     <div className="flex flex-col gap-y-4">
       {isMessage && (
         <Alert
-          className="self-start"
+          className="self-start animate-bounce"
           color={orderForm.success || payForm.success ? "success" : "failure"}
         >
           {orderForm.message || payForm.message}
