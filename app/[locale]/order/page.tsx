@@ -7,6 +7,7 @@ import { NewOrderButton } from "@/components/new-order-button";
 import { Status } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
+import ProductSelect from "@/components/product-select";
 
 export default async function Home() {
   const user = await currentUser();
@@ -101,22 +102,11 @@ export default async function Home() {
             />
           </div>
           {products.map((product) => (
-            <div key={product.id} className="flex flex-col gap-2">
-              <Label>{t(product.title)}</Label>
-              <div className="flex gap-4 flex-wrap">
-                {product.options.map((v, i) => (
-                  <div key={product.id + i} className="flex items-center gap-2">
-                    <Radio
-                      id={product.id + i}
-                      name={product.id}
-                      value={v}
-                      defaultChecked={selection[product.id] === v}
-                    />
-                    <Label htmlFor={product.id + i}>{v}</Label>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ProductSelect
+              key={product.id}
+              product={product}
+              selection={selection[product.id]}
+            />
           ))}
           <div className="flex flex-col gap-2">
             <Label>{t("Collection place")}</Label>
