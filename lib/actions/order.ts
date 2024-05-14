@@ -1,12 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import prisma from "./prismadb";
+import prisma from "../prismadb";
 import { getTranslations } from "next-intl/server";
 import { Status } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { validateRequest } from "./auth";
 
 export async function actionForm(
   orderId: string,
@@ -41,7 +42,7 @@ export async function actionForm(
     if (!parse.success) {
       return errorState;
     }
-    const user = { id: "", imageUrl: null };
+    const { user } = await validateRequest();
     const parkingLotId = formData.get("parkingLot")!.toString();
     const name = formData.get("name")?.toString()!;
     const phone = formData.get("phone")?.toString()!;
@@ -88,7 +89,6 @@ export async function actionForm(
       data: {
         name,
         phone,
-        imageUrl: user?.imageUrl ?? "",
         parkingLotId,
         status: status,
         userId: user?.id,
@@ -121,7 +121,7 @@ export async function newOrder() {
     success: false,
     message: t("There was an error. Please try again later."),
   };
-  const user = { id: "", imageUrl: null };
+  const { user } = await validateRequest();
   try {
     const profile =
       user &&
@@ -149,7 +149,6 @@ export async function newOrder() {
         data: {
           userId: user?.id,
           name,
-          imageUrl: user?.imageUrl ?? "",
           phone,
           parkingLotId,
           status: "OPEN",

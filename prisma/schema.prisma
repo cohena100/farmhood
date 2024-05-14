@@ -12,10 +12,10 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  username      String    @unique
-  password_hash String
-  sessions      Session[]
+  id       String    @id
+  username String    @unique
+  password String
+  sessions Session[]
 }
 
 model Session {
@@ -51,7 +51,6 @@ model Order {
   id           String         @id @default(uuid())
   userId       String?
   name         String
-  imageUrl     String
   phone        String
   products     OrderProduct[]
   parkingLot   ParkingLot     @relation(fields: [parkingLotId], references: [id])

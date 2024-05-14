@@ -1,6 +1,6 @@
 "use client";
 
-import { actionForm } from "@/lib/actions";
+import { actionForm } from "@/lib/actions/order";
 import { useFormState, useFormStatus } from "react-dom";
 import { Alert, Button } from "flowbite-react";
 import { useEffect, useState } from "react";
@@ -8,16 +8,15 @@ import { useTranslations } from "next-intl";
 import { NewOrderButton } from "./new-order-button";
 import { Status } from "@prisma/client";
 
-const initialState = {
-  success: false,
-  message: "",
-};
-
 interface SubmitButtonProps {
   orderId: string;
 }
 
 export function FormButtons({ orderId }: SubmitButtonProps) {
+  const initialState = {
+    success: false,
+    message: "",
+  };
   const t = useTranslations("home");
   const [orderForm, orderFormAction] = useFormState(
     actionForm.bind(null, orderId, Status.OPEN),

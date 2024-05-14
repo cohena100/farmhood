@@ -7,9 +7,10 @@ import { Status } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import ProductSelect from "@/components/product-select";
+import { validateRequest } from "@/lib/actions/auth";
 
-export default async function Home() {
-  const user = { id: "", imageUrl: null };
+export default async function OrderPage() {
+  const { user } = await validateRequest();
   const parkingLots = await prisma.parkingLot.findMany();
   const profile =
     user &&
@@ -23,7 +24,6 @@ export default async function Home() {
     parkingLots[0].id;
   const name = profile?.name || cookies().get("name")?.value || "";
   const phone = profile?.phone || cookies().get("phone")?.value || "";
-  const imageUrl = user?.imageUrl ?? "";
   const orderId = cookies().get("order")?.value;
   let order =
     orderId &&
@@ -46,11 +46,23 @@ export default async function Home() {
           include: { products: true },
           take: 1,
         }));
+      order = await prisma.order.create({
+        data: {
+          userId: user.id,
+          name,
+          phone,
+          parkingLotId,
+          status: Status.OPEN,
+          products: {
+            create: [],
+          },
+        },
+        include: { products: true },
+      });
     } else {
       order = await prisma.order.create({
         data: {
           name,
-          imageUrl,
           phone,
           parkingLotId,
           status: Status.OPEN,

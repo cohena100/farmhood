@@ -1,6 +1,6 @@
 "use client";
 
-import { newOrder } from "@/lib/actions";
+import { newOrder } from "@/lib/actions/order";
 import { Alert, Button } from "flowbite-react";
 import { useTransition } from "react";
 import { useTranslations } from "next-intl";
