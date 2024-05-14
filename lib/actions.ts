@@ -3,7 +3,6 @@
 import { z } from "zod";
 import prisma from "./prismadb";
 import { getTranslations } from "next-intl/server";
-import { currentUser } from "@clerk/nextjs";
 import { Status } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -42,7 +41,7 @@ export async function actionForm(
     if (!parse.success) {
       return errorState;
     }
-    const user = await currentUser();
+    const user = { id: "", imageUrl: null };
     const parkingLotId = formData.get("parkingLot")!.toString();
     const name = formData.get("name")?.toString()!;
     const phone = formData.get("phone")?.toString()!;
@@ -122,7 +121,7 @@ export async function newOrder() {
     success: false,
     message: t("There was an error. Please try again later."),
   };
-  const user = await currentUser();
+  const user = { id: "", imageUrl: null };
   try {
     const profile =
       user &&

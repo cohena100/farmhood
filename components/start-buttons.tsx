@@ -1,9 +1,7 @@
 "use client";
 
 import { Label, Button } from "flowbite-react";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import ContinueButton from "@/components/continue-button";
-
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
@@ -42,21 +40,17 @@ export default function StartButtons() {
   return (
     <div ref={container}>
       <div className="buttons invisible">
-        <SignUpButton mode="modal">
-          <Button gradientDuoTone="pinkToOrange" outline>
-            {t("One time registration")}
-          </Button>
-        </SignUpButton>
+        <Button gradientDuoTone="pinkToOrange" outline>
+          {t("One time registration")}
+        </Button>
       </div>
       <div className="separators invisible">
         <Label>🍓🥒🫐🍅</Label>
       </div>
       <div className="buttons invisible">
-        <SignInButton mode="modal">
-          <Button gradientDuoTone="tealToLime" outline>
-            {t("Re-entry")}
-          </Button>
-        </SignInButton>
+        <Button gradientDuoTone="tealToLime" outline>
+          {t("Re-entry")}
+        </Button>
       </div>
       <div className="separators invisible">
         <Label>🍓🥒🫐🍅</Label>

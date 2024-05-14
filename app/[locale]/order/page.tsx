@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Label, Radio, TextInput, Tooltip } from "flowbite-react";
 import prisma from "@/lib/prismadb";
-import { currentUser } from "@clerk/nextjs";
 import { FormButtons } from "@/components/form-buttons";
 import { NewOrderButton } from "@/components/new-order-button";
 import { Status } from "@prisma/client";
@@ -10,7 +9,7 @@ import { cookies } from "next/headers";
 import ProductSelect from "@/components/product-select";
 
 export default async function Home() {
-  const user = await currentUser();
+  const user = { id: "", imageUrl: null };
   const parkingLots = await prisma.parkingLot.findMany();
   const profile =
     user &&
