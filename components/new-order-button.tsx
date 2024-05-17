@@ -5,11 +5,11 @@ import { Alert, Button } from "flowbite-react";
 import { useTransition } from "react";
 import { useTranslations } from "next-intl";
 
-interface SubmitButtonProps {
+interface NewOrderButtonProps {
   message: string;
 }
 
-export function NewOrderButton({ message }: SubmitButtonProps) {
+export function NewOrderButton({ message }: NewOrderButtonProps) {
   const t = useTranslations("home");
   const [pending, startTransition] = useTransition();
   return (

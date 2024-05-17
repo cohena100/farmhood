@@ -4,8 +4,7 @@ import { z } from "zod";
 import prisma from "../prismadb";
 import { getTranslations } from "next-intl/server";
 import { Status } from "@prisma/client";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { redirect } from "@/navigation";
 import { cookies } from "next/headers";
 import { validateRequest } from "./auth";
 
@@ -162,6 +161,5 @@ export async function newOrder() {
     console.log(error);
     return errorState;
   }
-  revalidatePath("/[locale]/order", "page");
-  redirect("/order");
+  redirect("/");
 }
