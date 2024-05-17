@@ -13,7 +13,7 @@ import {
   NavbarToggle,
 } from "flowbite-react";
 import LocaleSwitcher from "./LocaleSwitcher";
-import { logout } from "@/lib/actions/auth";
+import { deleteUser, logout } from "@/lib/actions/auth";
 import { useTranslations } from "next-intl";
 import { Profile } from "@prisma/client";
 
@@ -58,7 +58,9 @@ export default function TopNavbar({ profile }: Props) {
               <DropdownItem onClick={async () => await logout()}>
                 {t("Sign out")}
               </DropdownItem>
-              <DropdownItem>{t("Delete user")}</DropdownItem>
+              <DropdownItem onClick={async () => await deleteUser()}>
+                {t("Delete user")}
+              </DropdownItem>
             </Dropdown>
           )}
           <DarkThemeToggle />
