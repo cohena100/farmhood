@@ -3,19 +3,12 @@ import { getMessages } from "next-intl/server";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
-import { ThemeModeScript } from "flowbite-react";
-import {
-  Flowbite,
-  DarkThemeToggle,
-  Navbar,
-  NavbarBrand,
-  NavbarCollapse,
-  NavbarToggle,
-} from "flowbite-react";
-import LocaleSwitcher from "@/components/LocaleSwitcher";
+import { ThemeModeScript, Flowbite } from "flowbite-react";
 import { cn } from "@/lib/utils";
 import useTextDirection from "@/lib/hooks";
-import Link from "next/link";
+import TopNavbar from "@/components/top-navbar";
+import { validateRequest } from "@/lib/actions/auth";
+import prisma from "@/lib/prismadb";
 
 const inter = Inter({ subsets: ["latin"], preload: true });
 
@@ -38,6 +31,13 @@ export default async function RootLayout({
 }: RootLayoutParams) {
   const messages = await getMessages();
   const direction = useTextDirection(locale);
+  const { user } = await validateRequest();
+  const profile =
+    user &&
+    (await prisma.profile.findUnique({
+      where: { id: user.id },
+    }));
+
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
       <head>
@@ -46,20 +46,7 @@ export default async function RootLayout({
       <NextIntlClientProvider locale={locale} messages={messages}>
         <body className={cn("dark:bg-gray-900", inter.className)}>
           <Flowbite>
-            <Navbar fluid border>
-              <NavbarBrand as={Link} href="/">
-                <span className=" text-xl font-semibold text-pink-600 dark:text-pink-600">
-                  משק אביהו🍓🥒🫐🍅
-                </span>
-              </NavbarBrand>
-              <NavbarToggle />
-              <NavbarCollapse>
-                <div className="flex gap-3 items-center">
-                  <DarkThemeToggle />
-                  <LocaleSwitcher />
-                </div>
-              </NavbarCollapse>
-            </Navbar>
+            <TopNavbar profile={profile} />
             {children}
           </Flowbite>
         </body>

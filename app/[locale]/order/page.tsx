@@ -10,6 +10,7 @@ import ProductSelect from "@/components/product-select";
 import { validateRequest } from "@/lib/actions/auth";
 
 export default async function OrderPage() {
+  const t = await getTranslations("home");
   const { user } = await validateRequest();
   const parkingLots = await prisma.parkingLot.findMany();
   const profile =
@@ -25,19 +26,17 @@ export default async function OrderPage() {
   const name = profile?.name || cookies().get("name")?.value || "";
   const phone = profile?.phone || cookies().get("phone")?.value || "";
   const orderId = cookies().get("order")?.value;
-  let order =
-    orderId &&
-    (await prisma.order.findUnique({
-      where: { id: orderId },
-      include: { products: true },
-    }));
-  if (!order) {
-    if (user) {
-      order =
-        (await prisma.order.findFirst({
-          where: { userId: user.id, status: Status.OPEN },
-          include: { products: true },
-        })) ||
+  const order =
+    (orderId &&
+      (await prisma.order.findUnique({
+        where: { id: orderId },
+        include: { products: true },
+      }))) ||
+    (user &&
+      ((await prisma.order.findFirst({
+        where: { userId: user.id, status: Status.OPEN },
+        include: { products: true },
+      })) ||
         (await prisma.order.findFirst({
           orderBy: {
             updatedAt: "desc",
@@ -45,35 +44,32 @@ export default async function OrderPage() {
           where: { userId: user.id, status: Status.PAID },
           include: { products: true },
           take: 1,
-        }));
-      order = await prisma.order.create({
-        data: {
-          userId: user.id,
-          name,
-          phone,
-          parkingLotId,
-          status: Status.OPEN,
-          products: {
-            create: [],
+        })) ||
+        (await prisma.order.create({
+          data: {
+            userId: user.id,
+            name,
+            phone,
+            parkingLotId,
+            status: Status.OPEN,
+            products: {
+              create: [],
+            },
           },
+          include: { products: true },
+        })))) ||
+    (await prisma.order.create({
+      data: {
+        name,
+        phone,
+        parkingLotId,
+        status: Status.OPEN,
+        products: {
+          create: [],
         },
-        include: { products: true },
-      });
-    } else {
-      order = await prisma.order.create({
-        data: {
-          name,
-          phone,
-          parkingLotId,
-          status: Status.OPEN,
-          products: {
-            create: [],
-          },
-        },
-        include: { products: true },
-      });
-    }
-  }
+      },
+      include: { products: true },
+    }));
   if (!order) notFound();
   const products = await prisma.product.findMany();
   const selection = Object.fromEntries(
@@ -82,7 +78,6 @@ export default async function OrderPage() {
   for (const p of order.products) {
     selection[p.productId] = p.quantity;
   }
-  const t = await getTranslations("home");
   return (
     <main className="flex flex-col ms-4 invisible">
       <form>
