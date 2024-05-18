@@ -1,11 +1,11 @@
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getLocale, getMessages } from "next-intl/server";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeModeScript, Flowbite } from "flowbite-react";
 import { cn } from "@/lib/utils";
-import useTextDirection from "@/lib/hooks";
+import { getLangDir } from "rtl-detect";
 import TopNavbar from "@/components/top-navbar";
 import { validateRequest } from "@/lib/actions/auth";
 import prisma from "@/lib/prismadb";
@@ -30,7 +30,7 @@ export default async function RootLayout({
   params: { locale },
 }: RootLayoutParams) {
   const messages = await getMessages();
-  const direction = useTextDirection(locale);
+  const direction = getLangDir(locale);
   const { user } = await validateRequest();
   const profile =
     user &&
