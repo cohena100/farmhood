@@ -10,11 +10,36 @@ async function main() {
   const products = await prisma.product.findMany();
   const parkingLots = await prisma.parkingLot.findMany();
   const users = [
-    { name: "אילנה אביטל", phone: "0521234567", password: "", parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id },
-    { name: "גידי גוב", phone: "0521234567", password: "", parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id },
-    // { name: "שלמה ארצי", phone: "0521234567", password: "", parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id },
-    // { name: "יהודית רביץ", phone: "0521234567", password: "", parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id },
-    { name: "עפרה חזה", phone: "0521234567", password: "", parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id },
+    {
+      name: "אילנה אביטל",
+      phone: "0521234567",
+      password: "",
+      parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id,
+    },
+    // {
+    //   name: "גידי גוב",
+    //   phone: "0521234567",
+    //   password: "",
+    //   parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id,
+    // },
+    // {
+    //   name: "שלמה ארצי",
+    //   phone: "0521234567",
+    //   password: "",
+    //   parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id,
+    // },
+    {
+      name: "יהודית רביץ",
+      phone: "0521234567",
+      password: "",
+      parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id,
+    },
+    {
+      name: "עפרה חזה",
+      phone: "0521234567",
+      password: "",
+      parkingLotId: parkingLots[getRandomInt(parkingLots.length)].id,
+    },
   ];
   users.forEach(async (user, i) => {
     // await prisma.user.create({
@@ -32,7 +57,10 @@ async function main() {
     //     parkingLotId: user.parkingLotId,
     //   },
     // });
-    const selectedProducts = R.sample(products, getRandomInt(products.length) + 1).map((product) => ({
+    const selectedProducts = R.sample(
+      products,
+      getRandomInt(products.length) + 1,
+    ).map((product) => ({
       quantity: getRandomInt(product.options.length),
       product: {
         connect: {
