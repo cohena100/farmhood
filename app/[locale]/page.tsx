@@ -6,7 +6,7 @@ export default async function Home() {
   const { user } = await validateRequest();
   if (user) redirect("/order");
   return (
-    <main className="flex flex-col gap-y-4 justify-center items-center h-screen invisible">
+    <main className="invisible flex h-screen flex-col items-center justify-center gap-y-4">
       <StartButtons />
     </main>
   );

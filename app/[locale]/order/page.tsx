@@ -73,17 +73,17 @@ export default async function OrderPage() {
   if (!order) notFound();
   const products = await prisma.product.findMany();
   const selection = Object.fromEntries(
-    products.map((product) => [product.id, 0])
+    products.map((product) => [product.id, 0]),
   );
   for (const p of order.products) {
     selection[p.productId] = p.quantity;
   }
   return (
-    <main className="flex flex-col ms-4 invisible">
+    <main className="invisible ms-4 flex flex-col">
       <form>
         <fieldset
           disabled={order.status === Status.PAID}
-          className="flex flex-col mt-2 gap-8"
+          className="mt-2 flex flex-col gap-8"
         >
           <div>
             <Label htmlFor="name" value={t("First name and last name")} />
@@ -131,7 +131,7 @@ export default async function OrderPage() {
           {order.status === Status.OPEN && (
             <Tooltip
               content={t(
-                "The buttons along with the alert are the only client componets of this page. The rest are server side rendered."
+                "The buttons along with the alert are the only client componets of this page. The rest are server side rendered.",
               )}
             >
               <FormButtons orderId={order.id} />
@@ -145,7 +145,7 @@ export default async function OrderPage() {
       <Label
         className="my-4"
         value={t(
-          "I will arrive on Tuesday around 17:30 at Weizmann 12 and then on the public parking space at Gordon 9."
+          "I will arrive on Tuesday around 17:30 at Weizmann 12 and then on the public parking space at Gordon 9.",
         )}
       />
     </main>
