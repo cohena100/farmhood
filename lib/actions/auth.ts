@@ -8,40 +8,46 @@ import { redirect } from "@/navigation";
 import { generateIdFromEntropySize } from "lucia";
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
+import { z } from "zod";
+
+const parseUsername = (username: FormDataEntryValue | null) =>
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(3)
+    .max(31)
+    .refine((username) => /^[a-z0-9_-]+$/.test(username))
+    .safeParse(username);
+
+const parsePassword = (password: FormDataEntryValue | null) =>
+  z.string().trim().min(6).max(255).safeParse(password);
 
 export async function signup(_: any, formData: FormData) {
   const t = await getTranslations("home");
-  const username = formData.get("username");
-  // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
-  // keep in mind some database (e.g. mysql) are case insensitive
-  if (
-    typeof username !== "string" ||
-    username.length < 3 ||
-    username.length > 31 ||
-    !/^[a-z0-9_-]+$/.test(username)
-  ) {
+  let username = formData.get("username");
+  const parsedUsername = parseUsername(username);
+  if (!parsedUsername.success) {
     return {
       error: t("Invalid username"),
     };
   }
+  username = parsedUsername.data;
   const existingUser = await prisma.user.findUnique({
-    where: { username: username.toLowerCase() },
+    where: { username: username },
   });
   if (existingUser)
     return {
       error: t("Invalid username"),
     };
-  const password = formData.get("password");
-  if (
-    typeof password !== "string" ||
-    password.length < 6 ||
-    password.length > 255
-  ) {
+  let password = formData.get("password");
+  const parsedPassword = parsePassword(password);
+  if (!parsedPassword.success) {
     return {
       error: t("Invalid password"),
     };
   }
-
+  password = parsedPassword.data;
   const passwordHash = await hash(password, {
     // recommended minimum parameters
     memoryCost: 19456,
@@ -62,24 +68,21 @@ export async function signup(_: any, formData: FormData) {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
   redirect("/order");
 }
 
 export async function login(_: any, formData: FormData) {
   const t = await getTranslations("home");
-  const username = formData.get("username");
-  if (
-    typeof username !== "string" ||
-    username.length < 3 ||
-    username.length > 31 ||
-    !/^[a-z0-9_-]+$/.test(username)
-  ) {
+  let username = formData.get("username");
+  const parse = parseUsername(username);
+  if (!parse.success) {
     return {
-      error: "Invalid username",
+      error: t("Invalid username"),
     };
   }
+  username = parse.data;
   const password = formData.get("password");
   if (
     typeof password !== "string" ||
@@ -123,7 +126,7 @@ export async function login(_: any, formData: FormData) {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
   redirect("/order");
 }
@@ -145,7 +148,7 @@ export const validateRequest = cache(async () => {
       cookies().set(
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes
+        sessionCookie.attributes,
       );
     }
     if (!result.session) {
@@ -153,7 +156,7 @@ export const validateRequest = cache(async () => {
       cookies().set(
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes
+        sessionCookie.attributes,
       );
     }
   } catch {}
@@ -172,7 +175,7 @@ export async function logout() {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
   redirect("/");
 }
@@ -189,7 +192,7 @@ export async function deleteUser() {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
   await prisma.user.delete({
     where: {
