@@ -1,5 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getMessages } from "next-intl/server";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
@@ -46,7 +46,7 @@ export default async function RootLayout({
       <NextIntlClientProvider locale={locale} messages={messages}>
         <body className={cn("dark:bg-gray-900", inter.className)}>
           <Flowbite>
-            <TopNavbar profile={profile} />
+            <TopNavbar profile={profile} user={user} />
             {children}
           </Flowbite>
         </body>

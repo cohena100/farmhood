@@ -16,12 +16,14 @@ import LocaleSwitcher from "./LocaleSwitcher";
 import { deleteUser, logout } from "@/lib/actions/auth";
 import { useTranslations } from "next-intl";
 import { Profile } from "@prisma/client";
+import { User } from "lucia";
 
 interface Props {
   profile: Profile | null;
+  user: User | null;
 }
 
-export default function TopNavbar({ profile }: Props) {
+export default function TopNavbar({ profile, user }: Props) {
   const t = useTranslations("home");
   const firstname =
     (profile && profile.name.split(" ").slice(0, -1).join(" ")) || " ";
@@ -30,14 +32,14 @@ export default function TopNavbar({ profile }: Props) {
   return (
     <Navbar fluid border>
       <NavbarBrand as={Link} href="/">
-        <span className=" text-xl font-semibold text-pink-600 dark:text-pink-600">
+        <span className="text-xl font-semibold text-pink-600 dark:text-pink-600">
           משק אביהו🍓🥒🫐🍅
         </span>
       </NavbarBrand>
       <NavbarToggle />
       <NavbarCollapse>
-        <div className="flex gap-3 items-center">
-          {profile && (
+        <div className="flex items-center gap-3">
+          {user && (
             <Dropdown
               label={
                 <Avatar
@@ -50,9 +52,11 @@ export default function TopNavbar({ profile }: Props) {
               inline
             >
               <DropdownHeader>
-                <span className="block text-sm">{profile.name}</span>
+                <span className="block text-sm">
+                  {firstname + " " + lastname}
+                </span>
                 <span className="block truncate text-sm font-medium">
-                  {profile.phone}
+                  {profile?.phone ?? ""}
                 </span>
               </DropdownHeader>
               <DropdownItem onClick={async () => await logout()}>
