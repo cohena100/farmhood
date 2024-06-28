@@ -140,7 +140,10 @@ export default async function OrderPage() {
         </fieldset>
       </form>
       {order.status === Status.PAID && (
-        <NewOrderButton message={t("Your order was paid successfully.")} />
+        <NewOrderButton
+          message={t("Your order was paid successfully.")}
+          orderId={order.id}
+        />
       )}
       <Label
         className="my-4"

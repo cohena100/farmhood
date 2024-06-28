@@ -20,11 +20,11 @@ export function FormButtons({ orderId }: SubmitButtonProps) {
   const t = useTranslations("home");
   const [orderForm, orderFormAction] = useFormState(
     actionForm.bind(null, orderId, Status.OPEN),
-    initialState
+    initialState,
   );
   const [payForm, payFormAction] = useFormState(
     actionForm.bind(null, orderId, Status.PAID),
-    initialState
+    initialState,
   );
   const { pending } = useFormStatus();
   const [isMessage, setIsMessage] = useState(false);
@@ -43,7 +43,7 @@ export function FormButtons({ orderId }: SubmitButtonProps) {
     <div className="flex flex-col gap-y-4">
       {isMessage && (
         <Alert
-          className="self-start animate-bounce"
+          className="animate-bounce self-start"
           color={orderForm.success || payForm.success ? "success" : "failure"}
         >
           {orderForm.message || payForm.message}
@@ -62,7 +62,7 @@ export function FormButtons({ orderId }: SubmitButtonProps) {
           </Button>
         </div>
       ) : payForm.success ? (
-        <NewOrderButton message="" />
+        <NewOrderButton message="" orderId={orderId} />
       ) : (
         <div className="flex gap-x-16">
           <Button
